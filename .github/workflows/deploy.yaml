@@ -18,18 +18,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          registry-url: 'https://registry.npmjs.org/'
+          registry-url: 'https://npmjs.org' # Keep this as is!
 
-      # 3. Install your package dependencies
       - name: Install dependencies
         run: npm ci
 
-      # 4. Optional: Build step if you use TypeScript, Babel, or Vite
-      # - name: Build package
-      #   run: npm run build
-
-      # 5. Publish to npm using your secret token
       - name: Publish to npm
         run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # This variable name MUST match what setup-node looks for
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} 
