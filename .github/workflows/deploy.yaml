@@ -1,0 +1,35 @@
+name: Publish Package to npm
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # Triggers only when you push a version tag like v1.0.0
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Pull down your repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js and point the registry to npm
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          registry-url: 'https://registry.npmjs.org/'
+
+      # 3. Install your package dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Optional: Build step if you use TypeScript, Babel, or Vite
+      # - name: Build package
+      #   run: npm run build
+
+      # 5. Publish to npm using your secret token
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
