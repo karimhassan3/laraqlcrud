@@ -12,16 +12,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 1. Setup Node without registry-url so 'npm ci' doesn't break
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          registry-url: 'https://npmjs.org' # This MUST be here so npm knows where to log in
 
+      # 2. This will now run successfully
       - name: Install dependencies
         run: npm ci
 
+      # 3. Inject the token safely and publish
       - name: Publish to npm
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # This MUST match your GitHub secret name
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          npm publish --access public
