@@ -18,13 +18,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          registry-url: 'https://npmjs.org' # Keep this as is!
 
+      # 2. This step will now execute successfully
       - name: Install dependencies
         run: npm ci
 
+      # 3. Pass the token directly to the npm publish command instead
       - name: Publish to npm
         run: npm publish --access public
         env:
-          # This variable name MUST match what setup-node looks for
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} 
